@@ -1,3 +1,6 @@
+try:import log
+
+except:pass
 import log
 import traceback
 
