@@ -4,18 +4,15 @@ import traceback
 try:
     import json
 
-    with open("config\\config.json",encoding="UTF-8") as file_config:
-        config = json.load(file_config)
+    with open("config\\config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
 
-except:
-    log.file_log("Exit 3")
+except:log.file_log("Exit 3")
 
 try:
     import tts
     import sst
 
-except:
-    log.file_log("Exit 2")
+except:log.file_log("Exit 2")
 
 try:
     import random
@@ -27,8 +24,7 @@ try:
 
     date = datetime.datetime.now()
 
-    if str(date.date())[5:] == config["date"]:
-        tts.play("с днём рождения")
+    if str(date.date())[5:] == config["date"]:tts.play("с днём рождения")
 
     def max2(z):
         log.file_log("start func max2")
@@ -41,11 +37,9 @@ try:
         return b
 
     def fuzz_cmd(_1,_2):
-        try:
-            return fuzz.ratio(_1,_2)
+        try:return fuzz.ratio(_1,_2)
 
-        except:
-            return 0
+        except:return 0
 
     def ceha(num):
             log.file_log("start func ceha")
@@ -135,7 +129,6 @@ try:
             log.file_log(f"наиболее вероятный ответ: '{cmd_otv}' вероятность того что он верен равна: {cmd[cmd_otv]}%") 
 
             if cmd[cmd_otv] >= config["t"]:
-
                 # время
                 if cmd_otv == 0 or cmd_otv == 1 or cmd_otv == 2:
                         log_time = datetime.datetime.now()
@@ -246,8 +239,7 @@ try:
                     log.file_log("команда не распознана!")
                     start()
 
-            else:
-                start()
+            else:start()
 
     def start():
         log.file_log("start func Start")
@@ -281,20 +273,15 @@ try:
                 log.file_log("вызов Кеши")
                 ceha(2)
 
-            else:
-                start()
+            else:start()
 
-        else:
-            start()
+        else:start()
 
     start()
 
 except:
-    if config["tester"]:
-        log.file_log(f"Error:\n{traceback.format_exc()}")
+    if config["tester"]:log.file_log(f"Error:\n{traceback.format_exc()}")
 
-    else:
-        log.file_log("Exit 1")
+    else:log.file_log("Exit 1")
 
-finally:
-    log.file_log("Exit 0")
+finally:log.file_log("Exit 0")
