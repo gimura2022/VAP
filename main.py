@@ -9,7 +9,7 @@ excepts = ""
 try:
     import json
 
-    with open("config\\config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
+    with open("config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
 
 except:
     if config["tester"]:log.file_log(f"Error:\n{traceback.format_exc()}");config = None

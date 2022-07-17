@@ -2,7 +2,7 @@ import log
 import pyttsx3
 import json
 
-with open("config\\config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
+with open("config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
 
 def play(data):
     log.file_log("start func play")

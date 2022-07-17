@@ -14,7 +14,7 @@ except:
 
 with open("log\\sesion.json","w") as f:f.write(dumps(sesion + 1))
 
-with open("config\\config.json") as config_file:config = load(config_file)
+with open("config.json") as config_file:config = load(config_file)
 
 def file_log(data):
     if config["loging"]:
