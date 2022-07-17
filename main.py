@@ -4,25 +4,33 @@ except:pass
 import log
 import traceback
 
+excepts = ""
+
 try:
     import json
 
     with open("config\\config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
 
-except:log.file_log("Exit 3")
+except:
+    if config["tester"]:log.file_log(f"Error:\n{traceback.format_exc()}");config = None
+
+    else:excepts += "3,";config = None
 
 try:
     import tts
     import sst
-
-except:log.file_log("Exit 2")
-
-try:
     import random
     from fuzzywuzzy import fuzz
     import datetime
     import webbrowser
+    import os
 
+except:
+    if config["tester"]:log.file_log(f"Error:\n{traceback.format_exc()}")
+
+    else:excepts += "2,"
+
+try:
     tts.play(f"добрый день {config['name']}")
 
     date = datetime.datetime.now()
@@ -98,6 +106,9 @@ try:
             cmd_youtube_0 = fuzz_cmd(config["command"]["cmd_youtube"][0], sst.cmd[len(config["name_"][num]):len(config["command"]["cmd_youtube"][0])])
             cmd_youtube_1 = fuzz_cmd(config["command"]["cmd_youtube"][1], sst.cmd[len(config["name_"][num]):len(config["command"]["cmd_youtube"][1])])
 
+            #выключение
+            cmd_off = fuzz_cmd(config["command"]["cmd_off"][0], sst.cmd[len(config["name_"][num]):])
+
             log.file_log(f"cmd_3: {cmd_3}%")
             log.file_log(f"cmd_3_1: {cmd_3_1}%")
             log.file_log(f"cmd_3_2: {cmd_3_2}%")
@@ -123,9 +134,10 @@ try:
             log.file_log(f"cmd_web_seah_1: {cmd_web_seah_1}%")
             log.file_log(f"cmd_youtube_0: {cmd_youtube_0}%")
             log.file_log(f"cmd_youtube_1: {cmd_youtube_1}%")
+            log.file_log(f"cmd_off: {cmd_off}%")
 
-            #        0       1       2       3       4      5      6           7          8           9        10         11        12      13      14           15        16           17        18     19        20         21               22            23         24
-            cmd = [cmd_3,cmd_3_1,cmd_3_2,cmd_a_0,cmd_a_1,cmd_a_2,cmd_data_0,cmd_data_1,cmd_data_2,cmd_help,cmd_help_1,cmd_help_2,cmd_k_0,cmd_k_1,cmd_name_0,cmd_name_1,cmd_rand_0,cmd_rand_1,cmd_stop,cmd_web_0,cmd_web_1,cmd_web_seah_0,cmd_web_seah_1,cmd_youtube_0,cmd_youtube_1]
+            #        0       1       2       3       4      5      6           7          8           9        10         11        12      13      14           15        16           17        18     19        20         21               22            23         24            25
+            cmd = [cmd_3,cmd_3_1,cmd_3_2,cmd_a_0,cmd_a_1,cmd_a_2,cmd_data_0,cmd_data_1,cmd_data_2,cmd_help,cmd_help_1,cmd_help_2,cmd_k_0,cmd_k_1,cmd_name_0,cmd_name_1,cmd_rand_0,cmd_rand_1,cmd_stop,cmd_web_0,cmd_web_1,cmd_web_seah_0,cmd_web_seah_1,cmd_youtube_0,cmd_youtube_1,cmd_off]
 
             cmd_otv = max2(cmd)
 
@@ -236,6 +248,14 @@ try:
                     webbrowser.open_new_tab(f"https://www.youtube.com/results?search_query={sst.cmd[len(config['command']['cmd_youtube'][0])+(len(config['name_'][num])+1):]}")
 
                     start()
+
+                # выключение
+                elif cmd_otv == 25:
+                    tts.play("хорошо выключение")
+                    
+                    os.system('shutdown /p /f')
+
+                    log.file_log("stop system")
                     
                 # команда не распознана!
                 else:
@@ -285,6 +305,6 @@ try:
 except:
     if config["tester"]:log.file_log(f"Error:\n{traceback.format_exc()}")
 
-    else:log.file_log("Exit 1")
+    else:excepts += "1,"
 
-finally:log.file_log("Exit 0")
+finally:log.file_log(f"exit codes {excepts[:-1] if excepts != '' else None}" if len(excepts[:-1]) > 1 else f"exit code {excepts[:-1] if excepts != '' else None}")

@@ -20,4 +20,4 @@ def audio_ubdite():
 
     except sr.UnknownValueError:log.file_log("фраза не распознана!")
 
-    except sr.RequestError as servis:log.file_log(f"Error servis {servis}")
+    except sr.RequestError as servis:log.file_log(f"Error servis sst {servis}")
