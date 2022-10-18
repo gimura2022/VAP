@@ -1,8 +1,6 @@
 import speech_recognition as sr
 import log
 
-log.file_log("creating variables")
-
 r = sr.Recognizer()
 cmd = ""
 

@@ -7,6 +7,8 @@ import random
 import datetime
 import webbrowser
 import os
+import requests
+from bs4 import BeautifulSoup
 
 try:
     with open("config.json",encoding="UTF-8") as file_config:config = json.load(file_config)
@@ -15,7 +17,7 @@ try:
 
     date = datetime.datetime.now()
 
-    if str(date.date())[5:] == config["date"]:tts.play("с днём рождения")
+    if str(date.date())[5:] == config["date"]:tts.play(f"с днём рождения {config['name']}")
 
     def max2(z):
         log.file_log("start func max2")
@@ -26,15 +28,6 @@ try:
                 s = z[x]
                 b = x
         return b
-
-    def command(func,cmd):
-        if sst.cmd.lower()[:len(cmd)] != "":
-            if sst.cmd.lower()[:len(cmd)] == cmd:func()
-
-    def command_end(func,cmd):
-        if sst.cmd.lower()[:len(cmd)] != "":
-            if sst.cmd.lower()[:len(cmd)] == cmd:func()
-            else:log.file_log(f"{sst.cmd} not recognized as a command!")
 
     # здесь писать функции команд
     def time_func():
@@ -97,26 +90,28 @@ try:
 
         webbrowser.open(f"https://www.google.com/search?q={sst.cmd.split()[5:]}")
 
+    def pogoda_func():
+        url = 'https://pogoda.mail.ru/prognoz/moskva/'
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        b = soup.find('div', class_='information__content__temperature')
+        
+        tts.play(f"за окном {b.text.split()[0][1:-1]} градусов")
+
     # тут не трогать
     while True:
             sst.audio_ubdite()
 
-            # тут писать вызовы команд
-            command(time_func,f"кеша {config['command']['cmd_3'][0]}")
-            command(time_func,f"кеша {config['command']['cmd_3'][1]}")
-            command(time_func,f"кеша {config['command']['cmd_3'][2]}")
+            len(config["command"][0]["inp"])
 
-            command(help_func,f"кеша {config['command']['cmd_help'][0]}")
-            command(help_func,f"кеша {config['command']['cmd_help'][1]}")
-            command(help_func,f"кеша {config['command']['cmd_help'][2]}")
+            for i in range(len(config["command"])):
+                for x in range(len(config["command"][i]["inp"])):
+                    if f"кеша {config['command'][i]['inp'][x]}" == sst.cmd.lower():
+                        if config["command"][i]["out"] != None:tts.play(config["command"][i]["out"])
+                        elif config["command"][i]["func"] != None:exec(f"{config['command'][i]['func']}()")
+                        break
 
-            command(name_func,f"кеша {config['command']['cmd_name'][0]}")
-
-            command(web_func,f"кеша {config['command']['cmd_web'][0]}")
-            command(web_func,f"кеша {config['command']['cmd_web'][1]}")
-
-            command(seath_web_func,f"кеша {config['command']['cmd_web_seah'][0]}")
-            command_end(seath_web_func,f"кеша {config['command']['cmd_web_seah'][1]}")
+            else:log.file_log(f"{sst.cmd} not recognized as a command!")
 
 except:
     if config["debug"]:log.file_log(f"Error:\n{traceback.format_exc()}")
